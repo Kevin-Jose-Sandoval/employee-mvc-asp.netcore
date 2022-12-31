@@ -1,0 +1,14 @@
+Packages needed to use Entity Framework
+	- Microsoft.EntityFrameworkCore.SqlServer - 6.0.4
+	- Microsoft.EntityFrameworkCore.Tools - 6.0.4
+	
+Configuration Entity Framework inside project
+	Tools -> NuGet Package Manager -> Package Manager Console
+	
+	Paste the next line
+	Scaffold-DbContext "Server=(local); DataBase=personal;Integrated Security=true" Microsoft.EntityFrameworkCore.SqlServer -OutPutDir Models
+
+	other option -> connectionString="Data Source=(local); Initial Catalog=personal; user id = admin; pwd=#Kevin4175"
+	
+	
+	
