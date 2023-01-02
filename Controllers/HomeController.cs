@@ -61,5 +61,24 @@ namespace EmployeeApp.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
+        [HttpGet]
+        public IActionResult Delete(int employeeId)
+        {
+            Employee employeeObject = _dbContext.Employees
+                .Include(c => c.PositionObject)
+                .Where(e => e.EmployeeId == employeeId).FirstOrDefault();
+
+            return View(employeeObject);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(Employee employeeObject)
+        {
+            _dbContext.Employees.Remove(employeeObject);
+            _dbContext.SaveChanges();
+
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

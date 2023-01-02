@@ -1,0 +1,45 @@
+﻿@model EmployeeApp.Models.Employee
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="d-flex justify-content-center align-items-center flex-column">
+    <h3 class="text-danger">Are you sure to delete the employee?</h3>
+    <hr />
+
+    <div class="row w-50">
+        <form asp-action="Delete" asp-controller="Home" method="post">
+            <input type="hidden" asp-for="EmployeeId" />
+
+            <div class="mb-2">
+                <label class="form-label" asp-for="Fullname">Fullname</label>
+                <input class="form-control form-control-sm" asp-for="Fullname" type="text" disabled />
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label" asp-for="Email">Email</label>
+                <input class="form-control form-control-sm" asp-for="Email" type="text" disabled />
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label" asp-for="Phone">Phone</label>
+                <input class="form-control form-control-sm" asp-for="Phone" type="text" disabled />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" asp-for="PositionId">Position</label>
+                <input class="form-control form-control-sm" asp-for="PositionObject.Description" type="text" disabled />
+
+            </div>
+
+            <div class="mb-2">
+                <button class="btn btn-danger btn-sm" type="submit"><i class="bi bi-trash3"></i> Delete</button>
+                <a asp-action="Index" asp-controller="Home" class="btn btn-secondary btn-sm">
+                    <i class="bi bi-arrow-return-left"></i> Back to list
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
