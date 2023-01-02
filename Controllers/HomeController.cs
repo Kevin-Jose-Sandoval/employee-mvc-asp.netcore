@@ -1,4 +1,8 @@
-﻿using EmployeeApp.Models;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+
+using EmployeeApp.Models;
+using EmployeeApp.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -6,27 +10,56 @@ namespace EmployeeApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly personalContext _dbContext;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(personalContext context)
         {
-            _logger = logger;
+            _dbContext = context;
         }
 
         public IActionResult Index()
         {
-            return View();
+            List<Employee> list = _dbContext.Employees.Include(c => c.PositionObject).ToList();
+            return View(list);
         }
 
-        public IActionResult Privacy()
+        [HttpGet]
+        public IActionResult EmployeeDetail(int employeeId)
         {
-            return View();
+            // return empty employee with a list of positions
+            EmployeeVM newEmployeeVM = new EmployeeVM()
+            {
+                EmployeeObject = new Employee(),
+                PositionListObject = _dbContext.Positions.Select(position => new SelectListItem()
+                {
+                    Text = position.Description,
+                    Value = position.PositionId.ToString(),
+                }).ToList()
+            };
+
+            if(employeeId != 0)
+            {
+                newEmployeeVM.EmployeeObject = _dbContext.Employees.Find(employeeId);
+            }
+
+            return View(newEmployeeVM);
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpPost]
+        public IActionResult EmployeeDetail(EmployeeVM objectEmployeeVM)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            if(objectEmployeeVM.EmployeeObject.EmployeeId == 0)
+            {
+                _dbContext.Employees.Add(objectEmployeeVM.EmployeeObject);
+            } 
+            else
+            {
+                _dbContext.Employees.Update(objectEmployeeVM.EmployeeObject);
+            }
+
+            _dbContext.SaveChanges();
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }
